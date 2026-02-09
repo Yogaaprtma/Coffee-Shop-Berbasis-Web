@@ -52,10 +52,39 @@ class OrderController extends Controller
         return redirect()->route('customer.cart')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 
+    public function updateCart(Request $request)
+    {
+        if($request->id && $request->quantity){
+            $cart = session()->get('cart');
+
+            $quantity = $request->quantity < 1 ? 1 : $request->quantity;
+            
+            $cart[$request->id]['jumlah'] = $quantity;
+
+            $cart[$request->id]['total'] = $cart[$request->id]['harga'] * $quantity;
+            
+            session()->put('cart', $cart);
+            
+            return redirect()->back()->with('success', 'Keranjang diperbarui!');
+        }
+    }
+
     public function showCart()
     {
         $cart = session()->get('cart', []);
         return view('customer.order.cart', compact('cart'));
+    }
+
+    public function removeFromCart(Request $request)
+    {
+        $cart = session()->get('cart');
+        
+        if(isset($cart[$request->id])) {
+            unset($cart[$request->id]);
+            session()->put('cart', $cart);
+        }
+        
+        return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang!');
     }
 
     public function checkout()
