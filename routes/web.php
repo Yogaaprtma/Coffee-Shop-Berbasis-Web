@@ -58,6 +58,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/customer/order', [OrderController::class, 'showProducts'])->name('customer.order');
     Route::post('/customer/order/add', [OrderController::class, 'addToCart'])->name('customer.addToCart');
     Route::get('/customer/cart', [OrderController::class, 'showCart'])->name('customer.cart');
+    Route::post('/customer/cart/remove', [OrderController::class, 'removeFromCart'])->name('customer.cart.remove');
+    Route::post('/customer/cart/update', [OrderController::class, 'updateCart'])->name('customer.cart.update');
     Route::post('/customer/checkout', [OrderController::class, 'checkout'])->name('customer.checkout');
     
     // Payment
