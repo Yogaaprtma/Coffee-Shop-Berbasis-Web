@@ -99,7 +99,10 @@
                             Pay Now <i class="fas fa-chevron-right ms-1"></i>
                         </a>
                     @else
-                        <button class="btn btn-outline-secondary rounded-pill px-4 btn-sm" disabled>View Details</button>
+                        <a href="{{ route('customer.order.detail', $order->id) }}" class="btn btn-outline-secondary rounded-pill px-4 py-2 small btn-action-group">
+                            View Details
+                        </a>
+
                         @if($order->status == 'completed')
                         <a href="{{ route('customer.order') }}" class="btn btn-coffee rounded-pill px-4 btn-sm">Buy Again</a>
                         @endif
