@@ -70,4 +70,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     // Order History
     Route::get('/customer/history', [OrderController::class, 'orderHistory'])->name('customer.history');
     Route::get('/customer/history/{id}', [OrderController::class, 'orderDetail'])->name('customer.order.detail');
+
+    // Profile
+    Route::get('/customer/profile', [CustomerController::class, 'profile'])->name('customer.profile');
 });

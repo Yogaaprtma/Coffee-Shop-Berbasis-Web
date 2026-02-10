@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -98,5 +99,11 @@ class CustomerController extends Controller
         ];
 
         return view('customer.blog.index', compact('blogs'));
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('customer.profile.index', compact('user'));
     }
 }

@@ -129,15 +129,29 @@
                     </ul>
                     
                     <div class="border-start ps-3 d-flex align-items-center gap-3">
-                        <a href="{{ route('customer.cart') }}" class="position-relative text-dark">
+                        <a href="{{ route('customer.cart') }}" class="position-relative text-dark me-2">
                             <i class="fas fa-shopping-bag fs-5"></i>
+                            @if(session('cart') && count(session('cart')) > 0)
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                                0
+                                {{ count(session('cart')) }}
                             </span>
+                            @endif
                         </a>
-                        <a href="{{ route('logout') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                            Logout
-                        </a>
+                        
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                    <i class="fas fa-user text-primary-custom"></i>
+                                </div>
+                                <span class="d-none d-lg-block small fw-bold">{{ Auth::user()->nama ?? 'User' }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2" aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item py-2" href="{{ route('customer.profile') }}"><i class="fas fa-user-circle me-2 text-muted"></i> Profile Saya</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ route('customer.history') }}"><i class="fas fa-receipt me-2 text-muted"></i> Riwayat Pesanan</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,7 +212,8 @@
             <i class="fas fa-receipt"></i>
             Orders
         </a>
-        <a href="#" class="nav-item-mobile"> <i class="fas fa-user"></i>
+        <a href="{{ route('customer.profile' )}}" class="nav-item-mobile {{ Route::is('customer.profile') ? 'active' : '' }}"> 
+            <i class="fas fa-user"></i>
             Akun
         </a>
     </div>
