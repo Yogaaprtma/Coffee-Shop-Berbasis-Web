@@ -122,4 +122,13 @@ class OrderController extends Controller
             ->get();
         return view('customer.order.history', compact('orders'));
     }
+
+    public function orderDetail($id)
+    {
+        $order = Order::with('orderItems.product', 'payment')
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return view('customer.order.detail', compact('order'));
+    }
 }
