@@ -57,6 +57,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     Route::get('/customer/order', [OrderController::class, 'showProducts'])->name('customer.order');
     Route::post('/customer/order/add', [OrderController::class, 'addToCart'])->name('customer.addToCart');
+    Route::get('/customer/blog', [CustomerController::class, 'blog'])->name('customer.blog');
     Route::get('/customer/cart', [OrderController::class, 'showCart'])->name('customer.cart');
     Route::post('/customer/cart/remove', [OrderController::class, 'removeFromCart'])->name('customer.cart.remove');
     Route::post('/customer/cart/update', [OrderController::class, 'updateCart'])->name('customer.cart.update');
@@ -68,4 +69,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     // Order History
     Route::get('/customer/history', [OrderController::class, 'orderHistory'])->name('customer.history');
+    Route::get('/customer/history/{id}', [OrderController::class, 'orderDetail'])->name('customer.order.detail');
 });
