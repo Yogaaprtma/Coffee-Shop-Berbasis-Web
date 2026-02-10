@@ -125,7 +125,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row gap-4">
                         <li class="nav-item"><a class="nav-link active" href="{{ route('home.customer') }}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('customer.order') }}">Shop</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('customer.blog') }}">Blog</a></li>
                     </ul>
                     
                     <div class="border-start ps-3 d-flex align-items-center gap-3">
