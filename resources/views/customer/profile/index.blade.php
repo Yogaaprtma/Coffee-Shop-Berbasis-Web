@@ -4,42 +4,91 @@
 
 @section('content')
     <style>
-        .profile-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            height: 180px;
-            border-radius: 0 0 30px 30px;
+        .profile-header-container {
             position: relative;
-            margin-bottom: 60px;
+            margin-bottom: 110px; 
         }
-        
-        .profile-avatar-wrapper {
+
+        .profile-bg {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            height: 150px;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+        }
+
+        .profile-info-wrapper {
             position: absolute;
-            bottom: -50px;
+            top: 100%; 
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%); 
             text-align: center;
+            width: 100%;
+            z-index: 10;
+            pointer-events: none; 
         }
-        
+
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            border: 4px solid white;
-            background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin: 0 auto 10px auto;
+            pointer-events: auto;
         }
-        
+
+        .user-name {
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        }
+        .user-email {
+            color: #666;
+            font-size: 0.9rem;
+            background-color: rgba(255,255,255,0.8);
+            padding: 2px 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        @media (min-width: 992px) {
+            .profile-header-container {
+                margin-bottom: 140px; 
+            }
+            .profile-bg {
+                height: 200px;
+                border-radius: 20px;
+                margin-top: 20px;
+            }
+            .profile-avatar {
+                width: 140px;
+                height: 140px;
+                font-size: 4rem;
+                border-width: 6px;
+            }
+            .profile-container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            .user-name {
+                font-size: 1.5rem;
+            }
+        }
+
         .menu-list {
             background: white;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
         }
         
         .menu-item {
@@ -52,78 +101,55 @@
             text-decoration: none;
             transition: 0.2s;
         }
-        
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-        
+        .menu-item:last-child { border-bottom: none; }
         .menu-item:hover {
-            background-color: #f8f9fa;
+            background-color: #fffbf7;
             color: var(--primary-color);
         }
         
         .menu-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
             background: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             color: #666;
+            transition: 0.2s;
         }
-        
         .menu-item:hover .menu-icon {
-            background: var(--bg-light);
-            color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
         }
         
         .logout-btn {
             background: #fee2e2;
             color: #dc2626;
-            border: none;
+            display: block;
             width: 100%;
             padding: 15px;
             border-radius: 15px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            text-align: center;
+            text-decoration: none;
             transition: 0.3s;
+            border: none;
         }
-        
-        .logout-btn:hover {
-            background: #fecaca;
-        }
-
-        /* Desktop View Adjustments */
-        @media (min-width: 992px) {
-            .profile-container {
-                max-width: 800px;
-                margin: 0 auto;
-            }
-            .profile-header {
-                height: 220px;
-                margin-bottom: 80px;
-                border-radius: 20px;
-                margin-top: 20px;
-            }
-            .profile-avatar {
-                width: 130px;
-                height: 130px;
-            }
-        }
+        .logout-btn:hover { background: #fecaca; color: #b91c1c; }
     </style>
 
-    <div class="profile-header shadow-sm">
-        <div class="profile-avatar-wrapper">
-            <div class="profile-avatar">
-                <i class="fas fa-user"></i>
+    <div class="container px-0 px-lg-3">
+        <div class="profile-header-container">
+            <div class="profile-bg shadow-sm"></div>
+            <div class="profile-info-wrapper">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h5 class="user-name">{{ $user->nama }}</h5>
+                <p class="user-email">{{ $user->email }}</p>
             </div>
-            <h5 class="fw-bold mb-0 text-dark">{{ $user->nama }}</h5>
-            <p class="text-muted small mb-0">{{ $user->email }}</p>
         </div>
     </div>
 
@@ -149,11 +175,6 @@
                             <label class="small text-muted mb-1">Alamat</label>
                             <div class="fw-bold text-truncate">{{ $user->alamat ?? '-' }}</div>
                         </div>
-                    </div>
-                    <div class="bg-light p-3 text-center border-top">
-                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-4">
-                            <i class="fas fa-pencil-alt me-1"></i> Edit Profile
-                        </button>
                     </div>
                 </div>
             </div>
@@ -205,17 +226,10 @@
                         </div>
                         <i class="fas fa-chevron-right text-muted small"></i>
                     </a>
-                    <a href="#" class="menu-item">
-                        <div class="d-flex align-items-center">
-                            <div class="menu-icon"><i class="fas fa-info-circle"></i></div>
-                            <span class="fw-medium">Tentang Aplikasi</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-muted small"></i>
-                    </a>
                 </div>
 
-                <a href="{{ route('logout') }}" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Keluar Akun
+                <a href="{{ route('logout') }}" class="logout-btn mb-4">
+                    <i class="fas fa-sign-out-alt me-2"></i> Keluar Akun
                 </a>
             </div>
         </div>
