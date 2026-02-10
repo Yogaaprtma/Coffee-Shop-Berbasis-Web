@@ -342,7 +342,7 @@
         <div class="mb-5" id="blog">
             <div class="section-header">
                 <h3 class="fw-bold m-0">Brewing Tips</h3>
-                <a href="#" class="see-all-link">Read Blog</a>
+                <a href="{{ route('customer.blog') }}" class="see-all-link">Read Blog</a>
             </div>
             <div class="row g-3">
                 <div class="col-md-6">
