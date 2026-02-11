@@ -47,4 +47,10 @@ class AdminController extends Controller
         $orders = Order::with('user', 'orderItems.product', 'payment')->get();
         return view('admin.order.index', compact('orders'));
     }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('admin.profile.index', compact('user'));
+    }
 }

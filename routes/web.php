@@ -49,6 +49,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/products/{id}', [ProductController::class, 'destroyProduct'])->name('products.destroy');
 
     Route::get('/admin/user-orders', [AdminController::class, 'order'])->name('order.page');
+
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
 });
 
 // Customer
