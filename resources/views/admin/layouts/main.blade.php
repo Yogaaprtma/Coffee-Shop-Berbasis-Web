@@ -183,6 +183,11 @@
                 <a href="{{ route('order.page') }}" class="nav-link-custom {{ Route::is('order.page') ? 'active' : '' }}">
                     <i class="fas fa-receipt"></i> Orders
                 </a>
+
+                <p class="text-uppercase text-muted small fw-bold mt-4 mb-2 ps-3" style="font-size: 0.75rem;">Account</p>
+                <a href="{{ route('admin.profile') }}" class="nav-link-custom {{ Route::is('admin.profile') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i> My Profile
+                </a>
             </nav>
 
             <div class="mt-auto pt-4 border-top">
@@ -248,7 +253,7 @@
                 <i class="fas fa-tags"></i>
                 Kategori
             </a>
-            <a href="#" class="nav-item-mobile" onclick="alert('Fitur Profile Admin belum tersedia di route web.php')">
+            <a href="{{ route('admin.profile') }}" class="nav-item-mobile {{ Route::is('admin.profile') ? 'active' : '' }}">
                 <i class="fas fa-user-circle"></i>
                 Profil
             </a>
