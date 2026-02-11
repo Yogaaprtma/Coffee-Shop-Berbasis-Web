@@ -1,162 +1,182 @@
 @extends('admin.layouts.main')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Dashboard')
+@section('page-title', 'Overview')
 
 @section('content')
-    <div class="container-fluid py-4">
-        <!-- Welcome Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-light">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="rounded-circle bg-coffee text-white p-3 me-3">
-                                <i class="fas fa-user fs-4"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-1">Welcome, {{ $user->nama }}!</h4>
-                                <p class="text-muted mb-0">{{ date('l, F d, Y') }}</p>
-                            </div>
-                            <div class="ms-auto">
-                                <a href="#" class="btn btn-sm btn-coffee">
-                                    <i class="fas fa-store me-1"></i> View Store
-                                </a>
-                            </div>
+    <style>
+        .stat-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            padding: 25px;
+            height: 100%;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .bg-soft-primary { 
+            background-color: rgba(111, 78, 55, 0.1); 
+            color: #6F4E37; 
+        }
+
+        .bg-soft-success { 
+            background-color: rgba(33, 150, 83, 0.1); 
+            color: #219653; 
+        }
+
+        .bg-soft-warning { 
+            background-color: rgba(242, 153, 74, 0.1); 
+            color: #f2994a; 
+        }
+
+        .bg-soft-info { 
+            background-color: rgba(47, 128, 237, 0.1); 
+            color: #2f80ed; 
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            transition: 0.3s;
+            text-align: center;
+            padding: 30px 20px;
+            height: 100%;
+            text-decoration: none;
+            display: block;
+            color: var(--text-dark);
+        }
+        .action-card:hover {
+            border-color: var(--primary-color);
+            background-color: #fffbf7;
+            color: var(--primary-color);
+        }
+    </style>
+
+    <div class="container-fluid p-0">
+        <div class="d-md-none mb-4">
+            <div class="bg-white p-4 rounded-4 shadow-sm border-start border-5 border-primary">
+                <h5 class="fw-bold">Halo, {{ $user->nama }}! 👋</h5>
+                <p class="text-muted small m-0">Selamat datang kembali di panel admin.</p>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Total Revenue</p>
+                            <h4 class="fw-bold mb-0">Rp {{ number_format($totalRevenue/1000, 0) }}k</h4>
                         </div>
+                        <div class="icon-box bg-soft-success">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-soft-success rounded-pill px-2 py-1 small">
+                            <i class="fas fa-arrow-up me-1"></i> Income
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Orders</p>
+                            <h4 class="fw-bold mb-0">{{ $totalOrders }}</h4>
+                        </div>
+                        <div class="icon-box bg-soft-warning">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted small">Total Transactions</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Products</p>
+                            <h4 class="fw-bold mb-0">{{ $totalProducts }}</h4>
+                        </div>
+                        <div class="icon-box bg-soft-primary">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted small">Active Menu Items</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small fw-bold text-uppercase mb-1">Customers</p>
+                            <h4 class="fw-bold mb-0">{{ $totalCustomers }}</h4>
+                        </div>
+                        <div class="icon-box bg-soft-info">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-muted small">Registered Users</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="row mb-4">
-            <!-- Orders -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-3">
-                                <div class="rounded-circle bg-primary bg-opacity-25 p-3 text-center">
-                                    <i class="fas fa-shopping-bag text-primary"></i>
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <div class="text-xs fw-bold text-uppercase mb-1">Orders</div>
-                                <div class="h5 mb-0 fw-bold">{{ $totalOrders }}</div>
-                                <div class="text-xs text-success"><i class="fas fa-arrow-up me-1"></i>Updated</div>
-                            </div>
-                        </div>
+        <h5 class="fw-bold mb-3">Quick Actions</h5>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-xl-3">
+                <a href="{{ route('products.create') }}" class="action-card">
+                    <div class="mb-3 text-primary">
+                        <i class="fas fa-plus-circle fa-2x"></i>
                     </div>
-                </div>
+                    <h6 class="fw-bold mb-1">Add Product</h6>
+                    <small class="text-muted">Create new menu item</small>
+                </a>
             </div>
-        
-            <!-- Revenue -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-3">
-                                <div class="rounded-circle bg-success bg-opacity-25 p-3 text-center">
-                                    <i class="fas fa-dollar-sign text-success"></i>
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <div class="text-xs fw-bold text-uppercase mb-1">Revenue</div>
-                                <div class="h5 mb-0 fw-bold">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
-                                <div class="text-xs text-success"><i class="fas fa-arrow-up me-1"></i>Updated</div>
-                            </div>
-                        </div>
+            <div class="col-6 col-md-4 col-xl-3">
+                <a href="{{ route('category.create') }}" class="action-card">
+                    <div class="mb-3 text-warning">
+                        <i class="fas fa-tags fa-2x"></i>
                     </div>
-                </div>
+                    <h6 class="fw-bold mb-1">Add Category</h6>
+                    <small class="text-muted">Create new category</small>
+                </a>
             </div>
-        
-            <!-- Customers -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-3">
-                                <div class="rounded-circle bg-info bg-opacity-25 p-3 text-center">
-                                    <i class="fas fa-users text-info"></i>
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <div class="text-xs fw-bold text-uppercase mb-1">Customers</div>
-                                <div class="h5 mb-0 fw-bold">{{ $totalCustomers }}</div>
-                                <div class="text-xs text-success"><i class="fas fa-arrow-up me-1"></i>Updated</div>
-                            </div>
-                        </div>
+            <div class="col-6 col-md-4 col-xl-3">
+                <a href="{{ route('order.page') }}" class="action-card">
+                    <div class="mb-3 text-success">
+                        <i class="fas fa-clipboard-check fa-2x"></i>
                     </div>
-                </div>
-            </div>
-        
-            <!-- Products -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-3">
-                                <div class="rounded-circle bg-warning bg-opacity-25 p-3 text-center">
-                                    <i class="fas fa-coffee text-warning"></i>
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <div class="text-xs fw-bold text-uppercase mb-1">Products</div>
-                                <div class="h5 mb-0 fw-bold">{{ $totalProducts }}</div>
-                                <div class="text-xs text-success"><i class="fas fa-plus me-1"></i>Updated</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-
-        <!-- Main Management Cards -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-4 mx-auto mb-4" style="width: fit-content;">
-                            <i class="fas fa-list fa-2x text-primary"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">Manage Categories</h5>
-                        <p class="text-muted mb-4">Organize your products by creating, editing, and managing categories.</p>
-                        <a href="{{ route('category.page') }}" class="btn btn-primary w-100">
-                            <i class="fas fa-cog me-2"></i> Manage Categories
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="rounded-circle bg-success bg-opacity-10 p-4 mx-auto mb-4" style="width: fit-content;">
-                            <i class="fas fa-coffee fa-2x text-success"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">Manage Products</h5>
-                        <p class="text-muted mb-4">Add, edit, or remove coffee products and manage inventory levels.</p>
-                        <a href="{{ route('product.page') }}" class="btn btn-success w-100">
-                            <i class="fas fa-tags me-2"></i> Manage Products
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center py-5">
-                        <div class="rounded-circle bg-warning bg-opacity-10 p-4 mx-auto mb-4" style="width: fit-content;">
-                            <i class="fas fa-shopping-cart fa-2x text-warning"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">Manage Orders</h5>
-                        <p class="text-muted mb-4">Track, process, and manage customer orders and shipments.</p>
-                        <a href="{{ route('order.page') }}" class="btn btn-warning w-100 text-white">
-                            <i class="fas fa-box me-2"></i> Manage Orders
-                        </a>
-                    </div>
-                </div>
+                    <h6 class="fw-bold mb-1">Check Orders</h6>
+                    <small class="text-muted">Process incoming orders</small>
+                </a>
             </div>
         </div>
     </div>
