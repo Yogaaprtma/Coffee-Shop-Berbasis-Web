@@ -1,132 +1,291 @@
 @extends('admin.layouts.main')
 
 @section('title', 'Tambah Kategori')
+@section('page-title', 'Tambah Kategori')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-light py-2 px-3 rounded shadow-sm">
-                    <li class="breadcrumb-item"><a href="{{ route('home.admin') }}" class="text-decoration-none"><i class="fas fa-home me-1"></i>Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('category.page') }}" class="text-decoration-none"><i class="fas fa-list me-1"></i>Kategori</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"><i class="fas fa-plus-circle me-1"></i>Tambah Kategori</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
+    <style>
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-plus-circle text-primary me-2"></i>
-                        <h5 class="m-0">Tambah Kategori Baru</h5>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data" id="categoryForm">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="nama" class="form-label fw-medium">Nama Kategori <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" required placeholder="Masukkan nama kategori">
-                            @error('nama')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Contoh: Espresso, Cappuccino, Latte</small>
-                        </div>
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+
+        .form-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            background-color: #fcfcfc;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(111, 78, 55, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #e0e0e0;
+            border-radius: 16px;
+            background-color: #fcfcfc;
+            text-align: center;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .upload-area:hover, .upload-area.dragover {
+            background-color: #fffbf7;
+            border-color: var(--primary-color);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        
+        .upload-area:hover .upload-icon {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .preview-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none; 
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #dc3545;
+            transition: 0.2s;
+        }
+
+        .remove-btn:hover { 
+            background: #fff; 
+            transform: scale(1.1); 
+        }
+
+        .btn-action {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+        
+        .btn-save {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(111, 78, 55, 0.2);
+        }
+
+        .btn-save:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-cancel {
+            background: #f1f3f5;
+            color: #6c757d;
+            border: none;
+        }
+
+        .btn-cancel:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-back {
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .btn-back {
+                width: auto;
+            }
+        }
+    </style>
+
+    <div class="container-fluid p-0">
+        <div class="row align-items-center mb-4 g-3">
+            <div class="col-12 col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="{{ route('home.admin') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('category.page') }}">Kategori</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tambah Baru</li>
+                    </ol>
+                </nav>
+                <p class="text-muted small m-0">Buat kategori produk baru untuk toko Anda.</p>
+            </div>
+            
+            <div class="col-12 col-md-4 text-md-end">
+                <a href="{{ route('category.page') }}" class="btn btn-sm btn-light rounded-pill px-4 py-2 shadow-sm border btn-back">
+                    <i class="fas fa-arrow-left me-1"></i> Kembali
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card form-card">
+                    <div class="card-body p-4 p-md-5">
                         
-                        <div class="mb-4">
-                            <label for="deskripsi" class="form-label fw-medium">Deskripsi <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="4" required placeholder="Masukkan deskripsi kategori"></textarea>
-                            @error('deskripsi')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Berikan deskripsi singkat tentang kategori ini</small>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="gambar" class="form-label fw-medium">Gambar Kategori</label>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="text-center py-4 mb-3" id="imagePreviewContainer">
-                                        <img src="/api/placeholder/200/200" id="imagePreview" class="img-fluid rounded border d-none" alt="Preview">
-                                        <div id="noImagePreview" class="rounded border p-5 text-center text-muted">
-                                            <i class="fas fa-image mb-3" style="font-size: 3rem;"></i>
-                                            <p>Pratinjau gambar akan muncul di sini</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-group">
-                                        <input type="file" class="form-control @error('gambar') is-invalid @enderror" id="gambar" name="gambar" accept="image/*">
-                                        <label class="input-group-text" for="gambar"><i class="fas fa-upload"></i></label>
-                                    </div>
-                                    @error('gambar')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                    <small class="text-muted">Unggah gambar kategori (opsional). Format: JPG, PNG, maksimal 2MB</small>
-                                </div>
+                        <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data" id="categoryForm">
+                            @csrf
+                            
+                            <div class="mb-4">
+                                <label for="nama" class="form-label fw-bold small text-uppercase text-muted">Nama Kategori <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('nama') is-invalid @enderror" 
+                                    id="nama" name="nama" placeholder="Contoh: Kopi Signature" value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer bg-white pt-0 pb-4 border-0">
-                    <div class="d-flex gap-2 justify-content-end mt-4">
-                        <a href="{{ route('category.page') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i>Batal
-                        </a>
-                        <button type="submit" form="categoryForm" class="btn btn-coffee">
-                            <i class="fas fa-save me-2"></i>Simpan
-                        </button>
+
+                            <div class="mb-4">
+                                <label for="deskripsi" class="form-label fw-bold small text-uppercase text-muted">Deskripsi <span class="text-danger">*</span></label>
+                                <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
+                                    id="deskripsi" name="deskripsi" rows="4" placeholder="Jelaskan singkat tentang kategori ini..." required>{{ old('deskripsi') }}</textarea>
+                                @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small text-uppercase text-muted">Gambar Kategori <span class="text-danger">*</span></label>
+                                
+                                <div class="upload-area" id="uploadArea">
+                                    <input type="file" name="gambar" id="gambarInput" accept="image/*" class="d-none" onchange="previewImage(this)">
+                                    
+                                    <div id="uploadPlaceholder">
+                                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                        <h6 class="fw-bold mb-1">Klik untuk Unggah Gambar</h6>
+                                        <p class="text-muted small mb-0">SVG, PNG, JPG atau GIF (Maks. 2MB)</p>
+                                    </div>
+
+                                    <div id="previewContainer" class="preview-container">
+                                        <img id="imagePreview" src="#" alt="Pratinjau" class="preview-img">
+                                        <button type="button" class="remove-btn shadow-sm" onclick="removeImage()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                @error('gambar')
+                                    <div class="text-danger small mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-3 pt-3 border-top mt-5">
+                                <button type="button" class="btn btn-action btn-cancel" onclick="window.history.back()">Batal</button>
+                                <button type="submit" class="btn btn-action btn-save">
+                                    <i class="fas fa-save me-2"></i> Simpan
+                                </button>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
 
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        // Image preview
-        $('#gambar').change(function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
+    <script>
+        // Klik Area Upload untuk Memicu Input File
+        document.getElementById('uploadArea').addEventListener('click', function(e) {
+            if(e.target.closest('.remove-btn')) return;
+            document.getElementById('gambarInput').click();
+        });
+
+        // Logika Pratinjau Gambar
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
                 reader.onload = function(e) {
-                    $('#imagePreview').attr('src', e.target.result);
-                    $('#imagePreview').removeClass('d-none');
-                    $('#noImagePreview').addClass('d-none');
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('uploadPlaceholder').style.display = 'none';
+                    document.getElementById('previewContainer').style.display = 'inline-block';
                 }
-                reader.readAsDataURL(file);
-            } else {
-                $('#imagePreview').addClass('d-none');
-                $('#noImagePreview').removeClass('d-none');
+                reader.readAsDataURL(input.files[0]);
             }
-        });
+        }
+
+        // Logika Hapus Gambar
+        function removeImage() {
+            document.getElementById('gambarInput').value = ""; // Reset input
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+            document.getElementById('previewContainer').style.display = 'none';
+        }
+
+        // Efek Drag and Drop
+        const uploadArea = document.getElementById('uploadArea');
         
-        // Form validation
-        $('#categoryForm').on('submit', function(e) {
-            let isValid = true;
-            
-            if ($('#nama').val().trim() === '') {
-                $('#nama').addClass('is-invalid');
-                isValid = false;
-            } else {
-                $('#nama').removeClass('is-invalid');
-            }
-            
-            if ($('#deskripsi').val().trim() === '') {
-                $('#deskripsi').addClass('is-invalid');
-                isValid = false;
-            } else {
-                $('#deskripsi').removeClass('is-invalid');
-            }
-            
-            return isValid;
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
         });
-    });
-</script>
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() { uploadArea.classList.add('dragover'); }
+        function unhighlight() { uploadArea.classList.remove('dragover'); }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('gambarInput').files = files;
+            previewImage(document.getElementById('gambarInput'));
+        }
+    </script>
 @endsection
