@@ -11,7 +11,12 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'status'
+        'status',
+        'order_type',
+        'table_number',
+        'promo_code_id',
+        'discount_amount',
+        'total_amount'
     ];
 
     public function user()
@@ -27,5 +32,10 @@ class Order extends Model
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function promoCode()
+    {
+        return $this->belongsTo(PromoCode::class);
     }
 }
