@@ -11,14 +11,27 @@ class CustomerController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $featuredProducts = Product::latest()->take(6)->get();
-        $newArrivals = Product::orderBy('created_at', 'desc')->take(5)->get();
-        $bestSelling = Product::withCount('orderItems')
+        $featuredProducts = Product::with('category')
+                        ->withCount('reviews')
+                        ->withAvg('reviews', 'rating')
+                        ->latest()
+                        ->take(6)
+                        ->get();
+        $newArrivals = Product::with('category')
+                        ->withCount('reviews')
+                        ->withAvg('reviews', 'rating')
+                        ->orderBy('created_at', 'desc')
+                        ->take(5)
+                        ->get();
+        $bestSelling = Product::with('category')
+                        ->withCount('reviews')
+                        ->withAvg('reviews', 'rating')
+                        ->withCount('orderItems')
                         ->orderBy('order_items_count', 'desc')
                         ->take(5)
                         ->get();
                         
-        return view('customer.index', compact('categories', 'featuredProducts', 'newArrivals', 'bestSelling'));
+        return view('customer.index-modern', compact('categories', 'featuredProducts', 'newArrivals', 'bestSelling'));
     }
 
     public function blog()
@@ -105,5 +118,33 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
         return view('customer.profile.index', compact('user'));
+    }
+
+    public function productDetail($id)
+    {
+        $product = Product::with('category')->findOrFail($id);
+        
+        $reviews = \App\Models\ProductReview::where('product_id', $id)
+            ->with('user')
+            ->latest()
+            ->get();
+            
+        $avgRating = \App\Models\ProductReview::where('product_id', $id)->avg('rating') ?: 0.0;
+        $totalReviews = $reviews->count();
+        
+        $isWishlisted = false;
+        if (Auth::check()) {
+            $isWishlisted = \App\Models\Wishlist::where('user_id', Auth::id())
+                ->where('product_id', $product->id)
+                ->exists();
+        }
+        
+        // Fetch related products (same category)
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(4)
+            ->get();
+
+        return view('customer.order.detail-modern', compact('product', 'reviews', 'avgRating', 'totalReviews', 'isWishlisted', 'relatedProducts'));
     }
 }
