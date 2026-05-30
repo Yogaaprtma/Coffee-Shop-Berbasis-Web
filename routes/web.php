@@ -8,6 +8,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PromoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +68,18 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/customer/cart/update', [OrderController::class, 'updateCart'])->name('customer.cart.update');
     Route::post('/customer/checkout', [OrderController::class, 'checkout'])->name('customer.checkout');
     
+    // Wishlist
+    Route::get('/customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
+    Route::post('/customer/wishlist/toggle', [WishlistController::class, 'toggle'])->name('customer.wishlist.toggle');
+
+    // Product Detail & Reviews
+    Route::get('/customer/product/{id}', [CustomerController::class, 'productDetail'])->name('customer.product.detail');
+    Route::post('/customer/product/{id}/review', [ReviewController::class, 'store'])->name('customer.product.review.store');
+
+    // Promo Codes
+    Route::post('/customer/promo/apply', [PromoController::class, 'apply'])->name('customer.promo.apply');
+    Route::post('/customer/promo/remove', [PromoController::class, 'remove'])->name('customer.promo.remove');
+
     // Payment
     Route::get('/customer/payment/{order_id}', [PaymentController::class, 'showPaymentForm'])->name('customer.payment');
     Route::post('/customer/payment/process', [PaymentController::class, 'processPayment'])->name('customer.payment.process');
