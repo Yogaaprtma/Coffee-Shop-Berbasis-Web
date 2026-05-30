@@ -104,33 +104,39 @@
         <div class="card-product overflow-hidden group">
             <!-- Image Container -->
             <div class="relative h-48 overflow-hidden bg-slate-100">
-                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                <a href="{{ route('customer.product.detail', $product->id) }}" class="block w-full h-full">
+                    <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                </a>
                 
                 <!-- Wishlist Button -->
-                <button class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors transform hover:scale-110" title="Add to wishlist">
-                    <i class="fas fa-heart"></i>
-                </button>
+                <form action="{{ route('customer.wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-10">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <button type="submit" class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center transition-colors transform hover:scale-110 active:scale-95 {{ Auth::check() && Auth::user()->wishlistProducts->contains($product->id) ? 'text-red-500' : 'text-slate-400 hover:text-red-500' }}" title="Add to wishlist">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </form>
                 
                 <!-- Rating Badge -->
+                @if($product->reviews_avg_rating)
                 <div class="absolute top-3 left-3 badge-coffee">
-                    <i class="fas fa-star text-xs mr-1"></i> 4.8
+                    <i class="fas fa-star text-xs mr-1"></i> {{ number_format($product->reviews_avg_rating, 1) }}
                 </div>
+                @endif
             </div>
             
             <!-- Product Info -->
             <div class="p-4">
                 <p class="text-xs font-semibold text-slate-500 uppercase mb-1">{{ $product->category->nama ?? 'Coffee' }}</p>
-                <h3 class="font-bold text-slate-900 truncate mb-3">{{ $product->nama }}</h3>
+                <h3 class="font-bold text-slate-900 truncate mb-3 hover:text-coffee-700">
+                    <a href="{{ route('customer.product.detail', $product->id) }}">{{ $product->nama }}</a>
+                </h3>
                 
                 <div class="flex justify-between items-center">
                     <span class="text-lg font-bold text-coffee-700">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
-                    <form action="{{ route('customer.addToCart') }}" method="POST" class="inline">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <button type="submit" class="w-8 h-8 rounded-full bg-coffee-700 text-white hover:bg-coffee-800 transition-all flex items-center justify-center shadow-md transform hover:scale-110">
-                            <i class="fas fa-plus text-xs"></i>
-                        </button>
-                    </form>
+                    <a href="{{ route('customer.product.detail', $product->id) }}" class="w-8 h-8 rounded-full bg-coffee-700 text-white hover:bg-coffee-800 transition-all flex items-center justify-center shadow-md transform hover:scale-110">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -177,14 +183,14 @@
             
             <div class="space-y-4">
                 @foreach($newArrivals->take(3) as $product)
-                <div class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all cursor-pointer group">
+                <a href="{{ route('customer.product.detail', $product->id) }}" class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all cursor-pointer group">
                     <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
                     <div class="flex-1 min-w-0">
                         <h4 class="font-semibold text-slate-900 truncate group-hover:text-coffee-700">{{ $product->nama }}</h4>
                         <p class="text-xs text-slate-500">{{ $product->created_at->diffForHumans() }}</p>
                     </div>
-                    <span class="font-bold text-coffee-700 whitespace-nowrap">Rp {{ number_format($product->harga/1000, 0) }}k</span>
-                </div>
+                    <span class="font-bold text-coffee-700 whitespace-nowrap">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                </a>
                 @endforeach
             </div>
         </div>
@@ -198,7 +204,7 @@
             
             <div class="space-y-4">
                 @foreach($bestSelling->take(3) as $index => $product)
-                <div class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all cursor-pointer group">
+                <a href="{{ route('customer.product.detail', $product->id) }}" class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 transition-all cursor-pointer group">
                     <div class="relative">
                         <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
                         <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center shadow-md">
@@ -209,8 +215,8 @@
                         <h4 class="font-semibold text-slate-900 truncate group-hover:text-coffee-700">{{ $product->nama }}</h4>
                         <p class="text-xs text-slate-500">{{ $product->order_items_count ?? 0 }} Sold</p>
                     </div>
-                    <span class="font-bold text-coffee-700 whitespace-nowrap">Rp {{ number_format($product->harga/1000, 0) }}k</span>
-                </div>
+                    <span class="font-bold text-coffee-700 whitespace-nowrap">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                </a>
                 @endforeach
             </div>
         </div>
