@@ -49,6 +49,7 @@
                     
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
                         <a href="{{ route('customer.profile') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-coffee-50 hover:text-coffee-700"><i class="fas fa-user-circle mr-2"></i> Profile</a>
+                        <a href="{{ route('customer.wishlist') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-coffee-50 hover:text-coffee-700"><i class="fas fa-heart mr-2"></i> Wishlist</a>
                         <a href="{{ route('customer.history') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-coffee-50 hover:text-coffee-700"><i class="fas fa-receipt mr-2"></i> Orders</a>
                         <hr class="my-2">
                         <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
